@@ -108,10 +108,10 @@
                         function (data, textStatus, jqXHR) {
                             baggagedelivery.baggageStorageArray = data;
 
-                            baggagedelivery.dxBaggageStorage.option('dataSource', baggagedelivery.baggageStorageArray.data);
+                            baggagedelivery.dxBaggageStorage.option('dataSource', baggagedelivery.baggageStorageArray);
 
-                            if (data.data.length == 1) {
-                                baggagedelivery.dxBaggageStorage.option('value', data.data[0].id);
+                            if (data.length == 1) {
+                                baggagedelivery.dxBaggageStorage.option('value', data[0].id);
                             }
                         });
                 },

@@ -32,21 +32,22 @@
 
             var baggageStorageForLookup = new DevExpress.data.CustomStore({
                 load: function (loadOptions) {
-                    return $.getJSON("/api/storage?customerId=" + storageplaces.dxCustomers.option('value'), null,
+                    return $.getJSON("/api/baggagestorage?customerId=" + storageplaces.dxCustomers.option('value'), null,
                         function (data, textStatus, jqXHR) {
                             storageplaces.baggageStorageArray = data;
 
-                            storageplaces.dxBaggageStorage.option('dataSource', storageplaces.baggageStorageArray.data);
+                            storageplaces.dxBaggageStorage.option('dataSource', storageplaces.baggageStorageArray);
 
                             storageplaces.dxDataGrid.option("dataSource", []);
-
-                            if (data.data.length == 1) {
-                                storageplaces.dxBaggageStorage.option('value', data.data[0].id);
+                            
+                            if (data.length == 1) {
+                                storageplaces.dxBaggageStorage.option('value', data[0].id);
                             }
                         });
                 },
                 byKey: function (key) {
                     var result = '???';
+                    
                     $.each(storageplaces.baggageStorageArray, function () {
                         if (key == this.id)
                             result = this;
@@ -90,6 +91,7 @@
             if (query == "insert" || query == "update") {
                 var obj = JSON.parse(request.data.values);
                 obj["customerId"] = storageplaces.dxCustomers.option('value');
+                debugger
                 request.data.values = JSON.stringify(obj);
             }
         },

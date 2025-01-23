@@ -41,9 +41,10 @@
             baggagereceiving.dxDataGrid.refresh();
         },
         rowInserting: function (e) {
-            for (var i = 0; i < baggagereceiving.storagePlacesArray.data.length; i++) {
-                if (baggagereceiving.storagePlacesArray.data[i].id == e.data.storagePlaceId) {
-                    baggagereceiving.newRecord_PlaceValue = baggagereceiving.storagePlacesArray.data[i].place;
+            debugger
+            for (var i = 0; i < baggagereceiving.storagePlacesArray.length; i++) {
+                if (baggagereceiving.storagePlacesArray[i].id == e.data.storagePlaceId) {
+                    baggagereceiving.newRecord_PlaceValue = baggagereceiving.storagePlacesArray[i].place;
                     break;
                 }
             }            
@@ -289,16 +290,16 @@
         },
 
         getPriceOneHour(placeId) {
-            for (var i = 0; i < baggagereceiving.storagePlacesArray.data.length; i++) {
-                if (baggagereceiving.storagePlacesArray.data[i].id == placeId)
-                    return baggagereceiving.storagePlacesArray.data[i].hourlyPrice;
+            for (var i = 0; i < baggagereceiving.storagePlacesArray.length; i++) {
+                if (baggagereceiving.storagePlacesArray[i].id == placeId)
+                    return baggagereceiving.storagePlacesArray[i].hourlyPrice;
             }
             return 0;
         },
         getPriceOneDay(placeId) {
-            for (var i = 0; i < baggagereceiving.storagePlacesArray.data.length; i++) {
-                if (baggagereceiving.storagePlacesArray.data[i].id == placeId)
-                    return baggagereceiving.storagePlacesArray.data[i].price;
+            for (var i = 0; i < baggagereceiving.storagePlacesArray.length; i++) {
+                if (baggagereceiving.storagePlacesArray[i].id == placeId)
+                    return baggagereceiving.storagePlacesArray[i].price;
             }
             return 0;
         },
@@ -312,10 +313,10 @@
                         function (data, textStatus, jqXHR) {
                             baggagereceiving.baggageStorageArray = data;
 
-                            baggagereceiving.dxBaggageStorage.option('dataSource', baggagereceiving.baggageStorageArray.data);
+                            baggagereceiving.dxBaggageStorage.option('dataSource', baggagereceiving.baggageStorageArray);
 
-                            if (data.data.length == 1) {
-                                baggagereceiving.dxBaggageStorage.option('value', data.data[0].id);
+                            if (data.length == 1) {
+                                baggagereceiving.dxBaggageStorage.option('value', data[0].id);
                             }
                         });
                 },
@@ -334,14 +335,16 @@
 
         storagePlaces: new DevExpress.data.CustomStore({
             load: function () {
-                return $.getJSON("/api/storageplaces/getfreeplaces?storageId=" + baggagereceiving.dxBaggageStorage.option('value'), null, function (data, textStatus, jqXHR) {
+                var val = baggagereceiving.dxBaggageStorage.option('value');
+                console.log("vall: " + val)
+                return $.getJSON("/api/storageplaces/getfreeplaces?storageId=" + val, null, function (data, textStatus, jqXHR) {
                     baggagereceiving.storagePlacesArray = data;
                 });
             },
             byKey: function (key) {
                 
                 var result = '???';
-                $.each(baggagereceiving.storagePlacesArray.data, function () {
+                $.each(baggagereceiving.storagePlacesArray, function () {
                     if (key == this.id)
                         result = this;
                 });
@@ -358,6 +361,7 @@
             byKey: function (key) {
 
                 var result = '???';
+                debugger
                 $.each(baggagereceiving.clientsArray.data, function () {
                     if (key == this.id)
                         result = this;
@@ -394,12 +398,12 @@
             if (baggagereceiving.getPriceOneHour(currentRowData.storagePlaceId)== 0) {
                 if (currentRowData.amountOfDays == undefined)
                     currentRowData.amountOfDays = 0;
-
-                for (var i = 0; i < baggagereceiving.storagePlacesArray.data.length; i++) {
-                    var id = baggagereceiving.storagePlacesArray.data[i].id;
+                for (var i = 0; i < baggagereceiving.storagePlacesArray.length; i++) {
+                    var id = baggagereceiving.storagePlacesArray[i].id;
 
                     if (id == currentRowData.storagePlaceId) {
                         newData.amountOfPlaces = value;
+                debugger
                         newData.amount = currentRowData.amountOfDays * value * baggagereceiving.storagePlacesArray.data[i].price;
                     }
                 }
@@ -408,8 +412,8 @@
                 if (currentRowData.amountOfHour == undefined) /////////
                     currentRowData.amountOfHour = 0;
 
-                for (var i = 0; i < baggagereceiving.storagePlacesArray.data.length; i++) {
-                    var id = baggagereceiving.storagePlacesArray.data[i].id;
+                for (var i = 0; i < baggagereceiving.storagePlacesArray.length; i++) {
+                    var id = baggagereceiving.storagePlacesArray[i].id;
 
                     if (id == currentRowData.storagePlaceId) {
                         newData.amountOfPlaces = value;
@@ -429,7 +433,7 @@
                 if (currentRowData.amountOfPlaces == undefined)
                     currentRowData.amountOfPlaces = 0;
 
-                for (var i = 0; i < baggagereceiving.storagePlacesArray.data.length; i++) {
+                for (var i = 0; i < baggagereceiving.storagePlacesArray.length; i++) {
                     var id = baggagereceiving.storagePlacesArray.data[i].id;
 
                     if (id == currentRowData.storagePlaceId) {
@@ -450,7 +454,7 @@
                 if (currentRowData.amountOfPlaces == undefined)
                     currentRowData.amountOfPlaces = 0;
 
-                for (var i = 0; i < baggagereceiving.storagePlacesArray.data.length; i++) {
+                for (var i = 0; i < baggagereceiving.storagePlacesArray.length; i++) {
                     var id = baggagereceiving.storagePlacesArray.data[i].id;
 
                     if (id == currentRowData.storagePlaceId) {
@@ -698,6 +702,7 @@
                                         .DataField("amountOfPlaces")
                                         .AllowSorting(false)
                                         .DataType(GridColumnDataType.String)
+                                        .FormItem(f=>f.Visible(false))
                                         .SetCellValue("baggagereceiving.setAmountOfPlacesValue")
                                         .Caption(Localizer["Кол-во мест"].Value);
 

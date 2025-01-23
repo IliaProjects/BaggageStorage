@@ -56,7 +56,7 @@ namespace BaggageStorage.Controllers.Api
         public object GetFreePlaces(DataSourceLoadOptions loadOptions, string storageId)
         {
             decimal d = 0;
-            var model = _db.StoragePlaces.Where(s => s.StorageId == storageId).OrderBy(s => Convert.ToInt32(s.Place));
+            var model = _db.StoragePlaces.Where(s => s.StorageId == storageId);//.OrderBy(s => Convert.ToInt32(s.Place));
             List<Object> result = new List<Object>();
 
             foreach (var item in model.ToList())
